@@ -4,6 +4,10 @@ import java.util.Vector;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.random.ISAACRandom;
+import org.apache.commons.math3.analysis.polynomials.*;
+import org.apache.commons.math3.analysis.solvers.LaguerreSolver;
+import org.apache.commons.math3.analysis.solvers.PolynomialSolver;
+import org.apache.commons.math3.complex.Complex;
 
 public class Main {
 	
@@ -21,6 +25,7 @@ public class Main {
 		E = MatrixUtils.createRealIdentityMatrix(n);
 		K = MatrixUtils.createRealIdentityMatrix(n);
 		b.add(-((A.multiply(K)).getTrace()));
+		b.add(1.0);
 		print();
 		for(int i = 2; i <= n; ++i) {
 			K = (A.multiply(K)).add(E.scalarMultiply(b.firstElement()));
@@ -28,9 +33,25 @@ public class Main {
 			b.add(0, A.multiply(K).getTrace() * (-1.0/i));
 			print();
 		}
+		print();
+		
+	    PolynomialFunction f = new PolynomialFunction(tomasiv(b));
+	    LaguerreSolver solver = new LaguerreSolver();
+	   // double a = solver.solve(10, f, -10, 10);
+	    Complex[] a = solver.solveAllComplex(tomasiv(b), 0);
+	    for(Complex i: a) {
+	    	System.out.println(i.getReal());
+	    }
+	    
+	}
+	private static double[] tomasiv(Vector<Double> vect){
+		double[] masiv = new double[vect.size()];
+		for(int i = 0; i < vect.size(); ++i) {
+			masiv[i] = vect.elementAt(i);
+		}
+		return masiv;
 		
 	}
-	
 	private static void initMatrix(double[][] matrix, int size) {
 		matrix = new double[size][];
 		for(int i = 0; i < size; ++i) {
@@ -45,7 +66,7 @@ public class Main {
 		for(Double i: b) {
 			System.out.print(i + " ");
 		}
-		System.out.println();
+		System.out.println("\n.........");
 		print(K);
 		System.out.println("////////");
 	}
