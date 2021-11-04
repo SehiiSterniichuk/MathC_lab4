@@ -24,8 +24,6 @@ public class Faddeev_leverrier extends Matrix{
 		if(b != null) b.clear();
 	}
 	private Vector<Double> my_characteristic(RealMatrix matrix){
-		boolean akj = this.n == 3;
-		assert (akj);
 		RealMatrix K = Identity(this.n);
 		b.add(-((matrix.multiply(K)).getTrace()));
 		b.add(1.0);

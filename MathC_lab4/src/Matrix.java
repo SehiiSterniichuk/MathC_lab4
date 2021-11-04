@@ -40,9 +40,8 @@ public abstract class Matrix {
 			else {
 				str += String.format("%." + NUM_AFTER_DOT +  "f", num);
 			}	
-			str += " ";
+			if(j < lenth - 1) str += " ";
 		}
-		str += "\n";
 		return str;
 	}
 	private static int widest_row(Vector<String> vect) {
@@ -80,6 +79,7 @@ public abstract class Matrix {
 	public static void print_String_Vector(Vector<String> vect) {
 		for(String i: vect) {
 			print(i);
+			print("\n");
 		}
 	}
 	public static void printMatrOld(RealMatrix matrix, String name) {
