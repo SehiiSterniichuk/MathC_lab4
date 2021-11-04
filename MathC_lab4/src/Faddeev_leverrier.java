@@ -10,21 +10,23 @@ import org.apache.commons.math3.linear.RealMatrix;
 public class Faddeev_leverrier extends Matrix{
 	private RealMatrix A;
 	private Vector<Double> b;
-	private RealMatrix K;
 	private int n;
 	private static RealMatrix E;
 	
 	public Faddeev_leverrier(double[][] matrixData) {
-		A = MatrixUtils.createRealMatrix(matrixData);
-		this.n = lenth(A);
+		setMatrix(matrixData);
 		b = new Vector<Double>(n);
 		E = super.Identity(n);
 	}
-	
+	public void setMatrix(double[][] matrixData) {
+		A = MatrixUtils.createRealMatrix(matrixData);
+		this.n = lenth(A);
+		if(b != null) b.clear();
+	}
 	private Vector<Double> my_characteristic(RealMatrix matrix){
 		boolean akj = this.n == 3;
 		assert (akj);
-		K = Identity(this.n);
+		RealMatrix K = Identity(this.n);
 		b.add(-((matrix.multiply(K)).getTrace()));
 		b.add(1.0);
 		printMatr(K, "K");
@@ -47,6 +49,10 @@ public class Faddeev_leverrier extends Matrix{
 	}
 	
 	public void solve() {
+		if(A == null) {
+			print("Matrix undefined");
+			return;
+		}
 		print("\tStart Faddeev-Leverrier`s method\n");
 		my_solve();
 	    apache_solve();
@@ -55,14 +61,14 @@ public class Faddeev_leverrier extends Matrix{
 	private void my_solve() {
 		print("\tMy solve start\n");
 		b = my_characteristic(A);
-		print("Coefficients of the characteristic equation: ", b);
+		print("Coefficients of the characteristic equation: \n", b);
 		Vector<Double> roots = NSolve(b);
-		print("Characteristic roots of a square matrix: ", roots);
+		print("\nCharacteristic roots of a square matrix: \n", roots);
 		print("\n\tMy solve end\n\n");
 	}
 	private void apache_solve() {
 		Vector<Double> java_roots = Eigenvalues(A);
-	    print("Eigenvalues finded by apache lib: ", java_roots);
+	    print("Eigenvalues finded by apache lib: \n", java_roots);
 	}
 	
 	
