@@ -23,18 +23,7 @@ public class Faddeev_leverrier extends Matrix{
 		this.n = lenth(A);
 		if(b != null) b.clear();
 	}
-	private Vector<Double> my_characteristic(RealMatrix matrix){
-		RealMatrix K = Identity(this.n);
-		b.add(-((matrix.multiply(K)).getTrace()));
-		b.add(1.0);
-		printMatr(K, "K");
-		for(int i = 2; i <= n; ++i) {
-			K = (matrix.multiply(K)).add(E.scalarMultiply(b.firstElement()));
-			b.add(0, matrix.multiply(K).getTrace() * (-1.0/i));
-			printMatr(K, "K");
-		}
-		return b;
-	}
+
 	public Vector<Double> NSolve(Vector<Double> b){
 		Vector<Double> roots = new Vector(b.size() + 1);
 		PolynomialFunction f = new PolynomialFunction(tomasiv(b));
@@ -47,10 +36,6 @@ public class Faddeev_leverrier extends Matrix{
 	}
 	
 	public void solve() {
-		if(A == null) {
-			print("Matrix undefined");
-			return;
-		}
 		print("\tStart Faddeev-Leverrier`s method\n");
 		my_solve();
 	    apache_solve();
@@ -63,6 +48,18 @@ public class Faddeev_leverrier extends Matrix{
 		Vector<Double> roots = NSolve(b);
 		print("\nCharacteristic roots of a square matrix: \n", roots);
 		print("\n\tMy solve end\n\n");
+	}
+	private Vector<Double> my_characteristic(RealMatrix matrix){
+		RealMatrix K = Identity(this.n);
+		b.add(-((matrix.multiply(K)).getTrace()));
+		b.add(1.0);
+		printMatr(K, "K");
+		for(int i = 2; i <= n; ++i) {
+			K = (matrix.multiply(K)).add(E.scalarMultiply(b.firstElement()));
+			b.add(0, matrix.multiply(K).getTrace() * (-1.0/i));
+			printMatr(K, "K");
+		}
+		return b;
 	}
 	private void apache_solve() {
 		Vector<Double> java_roots = Eigenvalues(A);

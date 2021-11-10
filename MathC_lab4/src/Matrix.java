@@ -18,7 +18,14 @@ public abstract class Matrix {
 	    return roots;
 	}
 	public static RealMatrix Eigenvectors(RealMatrix A){
-	    return (new EigenDecomposition(A)).getVT();
+		RealMatrix kostyl = (new EigenDecomposition(A)).getVT();
+		for(int i = 1; i < kostyl.getRowDimension(); ++i) {
+			for(int j = 0; j < kostyl.getColumnDimension(); ++j) {
+				double temp = -kostyl.getEntry(i, j);
+				kostyl.setEntry(i, j, temp);
+			}
+		}
+	    return kostyl;
 	}
 	private static Vector<String> matrix_toString(RealMatrix matrix) {
 		int lenth = lenth(matrix);
@@ -156,5 +163,39 @@ public abstract class Matrix {
 			}
 		}
 		return matrix;
+	}
+	public static Vector<Double> initvect( int size, Double value){
+		Vector<Double> vect = new Vector(size);
+		for(int i = 0; i < size; ++i) {
+			vect.add(value);
+		}
+		return vect;
+	}
+	public static double getAbsMax(double[][] mas, int row, int col) {
+		double max = max = getAbsMax(mas[0], col);
+		for(int i = 0; i < row; ++i) {
+			double[] vect = mas[i];
+			double tempmax = getAbsMax(mas[i], col);
+			if(tempmax > max)
+				max = tempmax;
+		}
+		return max;
+	}
+	
+	public static double getAbsMax(double[] vec, int size) {
+		double max = Math.abs(vec[0]);
+		for( int i = 0; i < size; ++i) {
+			double tempmax = Math.abs(vec[i]);
+			if(max < tempmax)
+				max = tempmax;
+		}
+		return max;
+	}
+	public static double[] initmasiv( int size, Double value){
+		double[] mas = new double[size];
+		for(int i = 0; i < size; ++i) {
+			mas[i] = value;
+		}
+		return mas;
 	}
 }
